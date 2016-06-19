@@ -13,63 +13,76 @@ with open('/Users/reallimoges/.flickr/secret_key') as f:
 
 flickr = flickrapi.FlickrAPI(key, secret, cache=True)
 
-
 def scrape_tag_public(TAG, collection, min_date, max_date):
     '''
     INPUTS: TAG (string), collection (pymongo cursor), 
             min_date (string), max_date (string)
-    OUTPUTS: None
+    OUTPUTS: Inserts into MongoDB new links
 
     Iterates through a search query on a given tag. Constructs
     a static link and stores it as the _id field in a Mongo Database
     '''
     
+    # Figures out how many pages to iterate through
     pages = int(flickr.photos.search(tags=TAG, min_upload_date=min_date,
                 max_upload_date=max_date).find('photos').get('pages'))
 
     for page in xrange(1, pages + 1):
         response = flickr.photos.search(tags=TAG, page=page)
-
+        
+        # Breaks out of function if no photos are present
         if len([photo for photo in response.find('photos')]) == 0: return
         
         added = 0
-        
         for photo in response.find('photos'):
-            link = 'https://farm'
-            link += str(photo.get('farm')) + '.staticflickr.com/'
-            link += str(photo.get('server')) + '/'
-            link += str(photo.get('id')) + '_'
-            link += str(photo.get('secret')) + '_b.jpg'
+            link = generate_link(photo)
             if collection.find_one({'_id': link}) is None:
                collection.insert({'_id': link})
                added += 1
 
         print "Added {} New Documents from {} to {}".format(added,
                                                 min_date, max_date)
-        time.sleep(.5)
+        time.sleep(0.5)
 
 def scrape_tag_group(GROUP, TAG, collection):
+    '''
+    INPUT: GROUP (string), TAG (string), colleciton (MongoDB collection)
+    OUTPUT: Inserts into MongoDB new links
+
+    Iterates through a search query on a given tag and group. Constructs
+    a static link and stores it in the _id field in a Mongo Database
+    '''
+    
+    # Figures out how many pages to iterate through
     pages = int(flickr.groups.pools.getPhotos(group_id=GROUP,
         tags=TAG).find('photos').get('pages'))
     
     for page in xrange(1, pages + 1):
         response = flickr.groups.pools.getPhotos(group_id=GROUP,
                 tags=TAG, page=page)
-
+        
+        # Breaks out of function if no photos are present
         if len([photo for photo in response.find('photos')]) == 0: return
 
         added = 0
 
         for photo in response.find('photos'):
             link = generate_link(photo)
-            added += 1
+            if collection.find_one({'_id': link}) is None:
+                collection.insert({'_id': link})
+                added += 1
 
         print "Added {} New Documents".format(added)
        
-        time.sleep(.5)
+        time.sleep(0.5)
 
 
 def generate_link(photo):
+    '''
+    INPUT: Element Tree of a photo
+    OUTPUTS : String (static link of photo)
+    '''
+    
     link = 'https://farm'
     link += str(photo.get('farm')) + '.staticflickr.com/'
     link += str(photo.get('server')) + '/'
@@ -77,6 +90,7 @@ def generate_link(photo):
     link += str(photo.get('secret')) + '_b.jpg'
     if collection.find_one({'_id': link}) is None:
         collection.insert({'_id': link})
+    
     return link
     
 def generate_dates():
