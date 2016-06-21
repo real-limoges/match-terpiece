@@ -3,7 +3,7 @@ import cPickle as pickle
 from PIL import Image as II
 from math import sqrt
 import pandas as pd
-
+import numpy as np
 
 IMAGE_DIR = '../../tmp/images/'
 DATA_DIR = '../data/'
@@ -16,7 +16,7 @@ def is_square(num):
     return False
 
 def make_file_name(image_name):
-    return os.getcwd() + '/' + IMAGE_DIR + '/' + image_name + '.jpg'
+    return  IMAGE_DIR  + image_name
 
 
 def plot_images(images, cluster_name):
@@ -49,19 +49,17 @@ def plot_images(images, cluster_name):
     background.save(RESULTS_DIR + cluster_name + '.png')
 
 
-if __name__ = '__main__':
-    df = pd.read_csv(DATA_DIR + 'clusters.csv')
+if __name__ == '__main__':
+    df = pd.read_csv(DATA_DIR + 'clusters.csv', index_col = 0)
 
     with open(RESULTS_DIR + 'k_means_model.pkl', 'rb') as f:
         clstr = pickle.load(f)
 
     fitted_df = clstr.predict(df)
     diff_df = clstr.transform(df)
-    '''
+    
     for cluster in range(clstr.n_clusters):
         clst = np.where(fitted_df == cluster)
-        images = np.array([make_file_name(map_files[index][1])
-                           for index in clst[0][:25]])
-
+        image_names = list(df.iloc[clst[0], :].index)
+        images = np.array([make_file_name(image) for image in image_names])
         plot_images(images, "Cluster {}".format(cluster))
-    '''
