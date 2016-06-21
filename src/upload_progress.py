@@ -27,7 +27,7 @@ def loop_until_term(collection, bucket):
     of items in the s3 bucket. Loop terminates when they are equal, as the
     task is done.
     '''
-    full_count = collection.count()    
+    full_count = count_bucket(collection) 
     s3_counter = count_bucket(bucket)
 
     while s3_counter != full_count:
@@ -45,7 +45,7 @@ if __name__ == '__main__':
         print """Incorrect number of parameters. Please enter a string for the MongoDB collection and a string for the s3 bucket."""
         sys.exit(1)
     
-    collection = db[coll_name]
+    collection = s3.Bucket(coll_name)
     bucket = s3.Bucket(bucket_name)
 
     loop_until_term(collection, bucket)
