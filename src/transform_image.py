@@ -20,14 +20,23 @@ def generate_keys(bucket):
             yield {'key': key.key, 'bucket_name': key.bucket_name}
 
 def list_keys(bucket):
+    '''
+    INPUTS: Bucket name (string)
+    OUTPUTS: List of keys from given s3 bucket
+    '''
+    
     new_bucket = bucket + extension
     keys=[]
     for key in s3.Bucket(bucket).objects.all():
-
         keys.append(key.key)
     return keys
 
 def check_key(key, bucket_name):
+    '''
+    INPUTS: Key (string) and s3 Bucket Name (string)
+    OUTPUTS: True if the key is the bucket; False otherwise
+    '''
+    
     bucket = s3.Bucket(bucket_name)
     objs = list(bucket.objects.filter(Prefix=key))
 
@@ -65,7 +74,6 @@ def transform(key, bucket_name):
         pass
 
 
-
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         old_bucket = sys.argv[1]
@@ -78,9 +86,8 @@ if __name__ == '__main__':
         
     set_o_keys = set(list_keys(old_bucket))
     set_n_keys = set(list_keys(new_bucket))
-    diff_set = set_o_keys.difference(set_n_keys)
-    #l_old_bucket = [old_bucket] * len(list_diff)
+    diff_set = list(set_o_keys.difference(set_n_keys))
     
     del set_o_keys, set_n_keys
     
-    for key in list(diff_set): transform(key, old_bucket)
+    for key in diff_set: transform(key, old_bucket)
