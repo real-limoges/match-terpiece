@@ -4,6 +4,7 @@ from PIL import Image as II
 from math import sqrt
 import pandas as pd
 import numpy as np
+import sys
 
 IMAGE_DIR = '../../tmp/images/'
 DATA_DIR = '../data/'
@@ -50,7 +51,10 @@ def plot_images(images, cluster_name):
 
 
 if __name__ == '__main__':
-    df = pd.read_csv(DATA_DIR + 'clusters.csv', index_col = 0)
+    if len(sys.argv) == 2:
+        df = pd.read_csv(DATA_DIR + sys.argv[1], index_col=0)
+    else:
+        df = pd.read_csv(DATA_DIR + 'clusters.csv', index_col = 0)
 
     with open(RESULTS_DIR + 'k_means_model.pkl', 'rb') as f:
         clstr = pickle.load(f)

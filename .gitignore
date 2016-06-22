@@ -3,3 +3,4 @@ data/*
 src/*.pyc
 results/*
 /src/*.swp
+*.tar.gz

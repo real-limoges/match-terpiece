@@ -4,6 +4,7 @@ import os
 from sklearn.cluster import KMeans
 import cPickle as pickle
 from sklearn import metrics
+import sys
 
 IMAGE_DIR = '../../tmp/images/'
 DATA_DIR = '../data/'
@@ -43,7 +44,11 @@ def define_cluster(df, k):
     return clstr.fit(df)
 
 if __name__ == '__main__':
-    df = pd.read_csv(DATA_DIR + 'clusters.csv', index_col=0)
+    if len(sys.argv) == 2:
+        df = pd.read_csv(DATA_DIR + sys.argv[1], index_col=0)
+    else:
+        df = pd.read_csv(DATA_DIR + 'clusters.csv', index_col=0)
+    
     k_means = find_max_cluster(df)
     
     with open(RESULTS_DIR + 'k_means_model.pkl', 'wb') as f:
