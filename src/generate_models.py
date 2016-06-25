@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 from sklearn.cluster import KMeans, MeanShift, MiniBatchKMeans
+from sklearn.preprocessing import StandardScaler
 import cPickle as pickle
 from sklearn import metrics
 import sys
@@ -14,7 +15,7 @@ DATA_DIR = '../data/'
 RESULTS_DIR = '../results/'
 
 
-def run_k_means(df, cls):
+def run_k_means(df, cls, norm=False):
     '''
     INPUTS: Pandas Dataframe
     OUTPUTS: Fitted K-Means model that has the highest Silhouette 
@@ -24,13 +25,14 @@ def run_k_means(df, cls):
     the Silhouette Coefficient for each (a measure of how dense the clusters
     are). Returns the model that has the densest clusters
     '''
-
+    if norm == True:
+        df = StandardScaler(copy=False).fit_transform(df)
     scores = []
     for k in xrange(5, 20):
         print "Clustering with {} as the hyperparameter".format(k)
         model = model_k_means(df, k)
 
-        with open(RESULTS_DIR + '{}_means_model_{}.pkl'.format(k,cls), 
+        with open(RESULTS_DIR + 'k_{}_{}_{}.pkl'.format(k,cls,norm), 
                     'wb') as f:
             pickle.dump(model, f)
 
@@ -40,7 +42,7 @@ def model_k_means(df, k):
     OUTPUTS: Fitted K-Means Model
     '''
     clstr = MiniBatchKMeans(n_clusters=k, random_state=42,
-            batch_size=50, verbose=1, compute_labels=False)
+            batch_size=100, verbose=0, compute_labels=False)
     return clstr.fit(df)
 
 
@@ -51,4 +53,5 @@ if __name__ == '__main__':
     else:
         raise Exception("Please provide a data file")
     
-    k_means = run_k_means(df, cls) 
+    run_k_means(df, cls, norm=False)
+    run_k_means(df, cls, norm=True)

@@ -1,4 +1,7 @@
-# Used to set up AWS instances
+# Be sure to run in sudo mode
+
+
+apt-get update
 apt-get install yum
 
 yum install -y tmux
@@ -22,5 +25,4 @@ pip install tornado==4.2
 pip install numpy
 pip install matplotlib
 pip install sklearn
-
-
+pip install pandas
