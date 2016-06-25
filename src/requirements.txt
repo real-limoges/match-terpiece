@@ -1,0 +1,26 @@
+# Used to set up AWS instances
+apt-get install yum
+
+yum install -y tmux
+yum install -y pssh
+yum install -y python27 python27-devel
+yum install -y freetype-devel libpng-devel
+wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | python27
+
+apt-get install python-setuptools
+easy_install pip
+easy_install py4j
+
+apt-get install build-essential python-dev python-setuptools \
+    python-numpy python-scipy libatlas-dev libatlas3gf-base
+
+pip install ipython==2.0.0
+pip install pyzmq==14.6.0
+pip install jinja2==2.7.3
+pip install tornado==4.2
+
+pip install numpy
+pip install matplotlib
+pip install sklearn
+
+

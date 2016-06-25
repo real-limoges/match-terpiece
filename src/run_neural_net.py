@@ -1,3 +1,7 @@
+import os
+os.environ["THEANO_FLAGS"] = "mode=FAST_RUN,device=gpu0,floatX=float32,cnmem=1"
+import theano
+
 from keras.models import Sequential
 from keras.layers.core import Flatten, Dense, Dropout
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
@@ -5,10 +9,11 @@ from keras.layers.convolutional import ZeroPadding2D
 from keras.optimizers import SGD
 import numpy as np
 from skimage import io
-import cv2
-import os
 import pandas as pd
+from scipy import misc
 
+DATA_DIR = 'data/'
+IMAGE_DIR = 'images/'
 
 def pop_layer(model):
     '''
@@ -20,7 +25,7 @@ def pop_layer(model):
     '''
 
     if not model.outputs:
-        raise Exception("Model does not have enough layers to pop")
+        raise Exception('Model does not have enough layers to pop')
 
     model.layers.pop()
     if not model.layers:
@@ -33,7 +38,7 @@ def pop_layer(model):
     model.built = False
 
 
-def VGG_16(weights):
+def VGG_16(weights, cls='fc1'):
     '''
     INPUT: H5 file of weights
     OUTPUT: Model fuction to be compiled
@@ -96,9 +101,12 @@ def VGG_16(weights):
     # Load Weights and Drop Classification Layer
     model.load_weights(weights)
 
-    # Pop off Classification Layer and Final Dropout
-    pop_layer(model)
-    pop_layer(model)
+    if cls == 'fc1':
+        for _ in xrange(4):
+            pop_layer(model)
+    elif cls == 'fc2':
+        for _ in xrange(2):
+            pop_layer(model)
 
     return model
 
@@ -110,12 +118,28 @@ def transform_image(path):
 
     Opens file with cv2, transposes to RGB, adds dimension and returns
     '''
-    im = cv2.imread(path)
-    im = im.transpose((2, 1, 0))
-    return np.expand_dims(im, axis=0)
+    mean_pixel = [103.939, 116.779, 123.68]
+
+    if os.stat(path).st_size < 4000:
+        return None
+
+    try:
+
+        im = misc.imread(path)
+        im = im[:,:,[2,1,0]]
+        im = misc.imresize(im, (224, 224)).astype(np.float32)
+
+        for channel in xrange(3):
+            im[:,:,channel] -= mean_pixel[channel]
+        im = im.transpose((2, 1, 0))
+    
+        return np.expand_dims(im, axis=0)
+    except Exception:
+        print "Issues with file {}".format(path)
+        return None
 
 
-def create_weights(model):
+def create_weights(model, cls):
     '''
     INPUTS: Model (Compiled Keras NN Function)
     OUTPUTS: Side Effects (Writes Pandas Dataframe to disk)
@@ -127,23 +151,35 @@ def create_weights(model):
     '''
     data = pd.DataFrame()
     image_names = []
-    for x, image in enumerate(os.listdir('images/')):
-        image_names.append(image)
-        print "processing image {}".format(x)
+
+    image_list = [image for image in os.listdir(IMAGE_DIR)
+                        if image.endswith('.jpg')]
+    for x, image in enumerate(image_list):
         if image.endswith('.jpg'):
-            img_arr = transform_image(os.getcwd() + '/images/' + image)
-            output = model.predict(img_arr)[0]
-            output.shape = (1, 4096)
-            data = pd.concat([data, pd.DataFrame(output)], axis=0)
+            img_arr = transform_image(IMAGE_DIR + image)
+            if img_arr is not None:
+                image_names.append(image)
+                print 'processing image {} for {}'.format(x, cls)
+                output = model.predict(img_arr)[0]
+                output.shape = (1, 4096)
+                data = pd.concat([data, pd.DataFrame(output)], axis=0)
     data.set_index(pd.Series(image_names), inplace=True)
     
     return data
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
-    model = VGG_16('../transfer_learning/data/vgg16_weights.h5')
+    model_fc1 = VGG_16(DATA_DIR + 'vgg16_weights.h5', 'fc1')
     sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(optimizer=sgd, loss='categorical_crossentropy')
-    data = create_weights(model)
-    data.to_csv("cluster.csv")
+    model_fc1.compile(optimizer=sgd, loss='categorical_crossentropy')
+
+    model_fc2 = VGG_16(DATA_DIR + 'vgg16_weights.h5', 'fc2')
+    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
+    model_fc2.compile(optimizer=sgd, loss='categorical_crossentropy')
+
+    data_fc1 = create_weights(model_fc1, 'fc1')
+    data_fc1.to_csv(DATA_DIR + 'fc1_cluster.csv')
+    
+    data_fc2 = create_weights(model_fc2, 'fc2')
+    data_fc2.to_csv(DATA_DIR + 'fc2_cluster.csv')

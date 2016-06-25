@@ -9,6 +9,8 @@ import sys
 IMAGE_DIR = '../../tmp/images/'
 DATA_DIR = '../data/'
 RESULTS_DIR = '../results/'
+MAX_NUM = 49
+
 
 def is_square(num):
     root = sqrt(num)
@@ -51,19 +53,14 @@ def plot_images(images, cluster_name):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 3:
         df = pd.read_csv(DATA_DIR + sys.argv[1], index_col=0)
-    else:
-        df = pd.read_csv(DATA_DIR + 'clusters.csv', index_col = 0)
-
-    with open(RESULTS_DIR + 'k_means_model.pkl', 'rb') as f:
-        clstr = pickle.load(f)
+        model = pickle.load(open(RESULTS_DIR + sys.argv[2], 'rb'))
 
     fitted_df = clstr.predict(df)
-    diff_df = clstr.transform(df)
     
     for cluster in range(clstr.n_clusters):
         clst = np.where(fitted_df == cluster)
-        image_names = list(df.iloc[clst[0], :].index)
+        image_names = list(df.iloc[clst[0][:MAX_NUM], :].index)
         images = np.array([make_file_name(image) for image in image_names])
         plot_images(images, "Cluster {}".format(cluster))
