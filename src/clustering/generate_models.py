@@ -42,7 +42,8 @@ def model_k_means(df, k):
     OUTPUTS: Fitted K-Means Model
     '''
     clstr = MiniBatchKMeans(n_clusters=k, random_state=42,
-            batch_size=100, verbose=0, compute_labels=False)
+            batch_size=100, verbose=0, compute_labels=False,
+            init='random')
     return clstr.fit(df)
 
 
