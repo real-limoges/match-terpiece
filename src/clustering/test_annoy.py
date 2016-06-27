@@ -5,8 +5,8 @@ from annoy import AnnoyIndex
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-DATA_DIR = '../data/'
-IMAGE_DIR = '../images/'
+DATA_DIR = '../../data/'
+IMAGE_DIR = '../../images/'
 
 
 def build_tree(df, metric):

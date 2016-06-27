@@ -6,3 +6,5 @@ results/*
 *.tar.gz
 src/featurizing/fc*
 src/.ipynb*
+app/*.pyc
+app/uploads/*
