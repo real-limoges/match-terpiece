@@ -12,8 +12,11 @@ from skimage import io
 import pandas as pd
 from scipy import misc
 
-DATA_DIR = 'data/'
-IMAGE_DIR = 'images/'
+directory = os.path.dirname(os.path.abspath(__file__))
+
+DATA_DIR = os.path.join(directory, '../../data/')
+IMAGE_DIR = os.path.abspath('../../images/') + '/'
+WEIGHTS = os.path.join(DATA_DIR, 'vgg16_weights.h5')
 
 def pop_layer(model):
     '''
@@ -134,6 +137,7 @@ def transform_image(path):
         im = im.transpose((2, 1, 0))
     
         return np.expand_dims(im, axis=0)
+    
     except Exception:
         print "Issues with file {}".format(path)
         return None
@@ -167,16 +171,38 @@ def create_weights(model, cls):
     
     return data
 
+def build_model(cls):
+    '''
+    INPUTS: cls, string variable describing which fully connected layer
+            to build the model around
+    OUTPUTS: Compiled Keras model with pre-trained weights loaded into it
+    '''
+    model = VGG_16(WEIGHTS, cls)
+    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
+    model.compile(optimizer=sgd, loss='categorical_crossentropy')
+    
+    return model
+
+def score_one_photo(model, path):
+    '''
+    INPUTS: Compiled Keras Model, Path to Image
+    OUTPUTS: Returns Pandas Dataframe with size (1,4096)
+
+    Takes a compiled model and a path to a single image. Transforms
+    the image, predicts with the neural network, and returns as a 
+    dataframe.
+    '''
+    image = transform_image(path)
+    output = model.predict(image)[0]
+    output.shape = (1, 4096)
+
+    return pd.DataFrame(output)
+
 
 if __name__ == '__main__':
 
-    model_fc1 = VGG_16(DATA_DIR + 'vgg16_weights.h5', 'fc1')
-    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    model_fc1.compile(optimizer=sgd, loss='categorical_crossentropy')
-
-    model_fc2 = VGG_16(DATA_DIR + 'vgg16_weights.h5', 'fc2')
-    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    model_fc2.compile(optimizer=sgd, loss='categorical_crossentropy')
+    model_fc1 = build_model('fc1')
+    model_fc2 = build_model('fc2')    
 
     data_fc1 = create_weights(model_fc1, 'fc1')
     data_fc1.to_csv(DATA_DIR + 'fc1_cluster.csv')

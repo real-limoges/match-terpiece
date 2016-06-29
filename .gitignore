@@ -8,3 +8,4 @@ src/featurizing/fc*
 src/.ipynb*
 app/*.pyc
 app/uploads/*
+app/static/training_img/*

@@ -1,0 +1,29 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+
+<style>
+
+img {
+    height:70%;
+    width:70%;
+    display: block;
+    margin: 0 auto;
+}
+</style>
+
+
+{% if filename %}
+<br><br>
+<center>
+<!-- <img src='/static/uploads/{{filename}}' /> -->
+</center>
+{% endif %}
+
+{% for item in filenames %}
+<img src='/static/training_img/{{item}}' />
+{% endfor %}
+
+{% endblock %}
+

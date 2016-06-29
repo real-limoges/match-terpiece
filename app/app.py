@@ -2,7 +2,9 @@
 # Imports
 #----------------------------------------------------------------------------#
 import flask
-from flask import Flask, render_template, request, url_for, redirect
+from flask import (Flask, render_template, request, url_for, 
+                   redirect, send_from_directory)
+from flask_multistatic import MultiStaticFlask
 from werkzeug.utils import secure_filename
 
 import logging
@@ -10,22 +12,38 @@ from logging import Formatter, FileHandler
 from forms import *
 import os
 import requests
-
+import cPickle as pickle
 import numpy as np
 import pandas as pd
-from annoy import AnnoyIndex
+import json
+
+import sys
 
 
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
-
-UPLOAD_FOLDER = 'uploads/'
+UPLOAD_FOLDER = 'static/uploads/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'tiff'])
 
-app = Flask(__name__)
+app = MultiStaticFlask(__name__)
+#app.static_folder = [
+#        os.path.join(app.root_path, '../images', app.config['CUSTOM_STATIC_PATH']), 
+#        os.path.join(app.root_path, 'static', 'default')]
 app.config.from_object('config')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['CUSTOM_STATIC_PATH'] = '../images/'
+sys.path.append('/Users/reallimoges/projects/transfer_learning')
+
+from src.model.run_neural_net import score_one_photo, build_model
+from src.clustering.ANN import get_tree_index
+
+with open('../data/fc1_scaler.pkl', 'rb') as f:
+    scaler = pickle.load(f)
+
+MODEL = build_model('fc1')
+TREE, INDEXES = get_tree_index('euclidean')
+
 
 #----------------------------------------------------------------------------#
 # Miscellaneous Functions 
@@ -46,49 +64,51 @@ def allowed_file(filename):
 # Controllers 
 #----------------------------------------------------------------------------#
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def home():
+    return render_template('pages/placeholder.home.html')
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_photo():
     if request.method == 'POST':
         if 'file' not in request.files:
-            print "bad file"
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
-            print "no file"
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            print "confirmed good file"
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print "saved file"
-            return redirect(url_for('about'))
+            
+            return redirect(url_for('neighbors', filename=filename)) 
 
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
-    #return render_template('pages/placeholder.home.html')
+    return render_template('pages/placeholder.upload.html')
+
+
+@app.route('/neighbors', methods=['GET', 'POST'])
+@app.route('/neighbors/<filename>', methods=['GET', 'POST'])
+def neighbors(filename):
+    path = os.path.abspath('static/uploads/' + filename)
+    score = score_one_photo(MODEL, path)
+    kneighs = TREE.get_nns_by_vector(score, 5)
+    filenames = []
+    for item in kneighs: filenames.append(INDEXES[item])
+
+    return render_template('pages/placeholder.neighbors.html', filename=filename, filenames=filenames)
+    #return """<h1> I made it here {} </h1> """.format(filename)
 
 @app.route('/about')
 def about():
     return render_template('pages/placeholder.about.html')
 
 
+@app.route('/gallery')
+def gallery():
+    return render_template('pages/placeholder.gallery.html')
 
 # Error handlers.
-
-@app.errorhandler(500)
-def internal_error(error):
-    #db_session.rollback()
-    return render_template('errors/500.html'), 500
-
 
 @app.errorhandler(404)
 def not_found_error(error):
@@ -100,5 +120,4 @@ def not_found_error(error):
 
 # Default port:
 if __name__ == '__main__':
-    print app.config['UPLOAD_FOLDER']
     app.run(debug=True)
