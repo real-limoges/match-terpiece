@@ -11,7 +11,10 @@
 <br> -- Sir Isaac Newton </i></b>
 
 <h3>What is Transfer Learning?</h3>
-<p>Transfer learning takes  
+<p>Transfer learning takes a machine learning model that solves one problem and recycles it to solve other related problems. In the case of this project, the neural network was trained on ImageNet photos. these photos have 1,000 classes that need to be detected. ImageNet images are 
+
+This project 
+
 </p>
 
 <h3>Which Pre-Trained Neural Network Was Used?</h3>
@@ -33,9 +36,12 @@ Convolutions help maintain the structure of the image that is passed through it.
 <h3>What Data Was Used</h3>
 <p>I used the Flickr API to generate the links of approximately 55 thousand images that were tagged as "abstract art." Of these, 45 thousand images were publically available, and satisfied the 224x224 pixel requirement.
 </p>
+<p>Instead of using the classifications provided by VGG16, the last few layers were removed and the output for each image is a row with 4,096 columns. Each column corresponds to the activation on that neuron.
+</p>
 
 <h3>Is There Pattern In The Data?</h3>
-<p> Here are some very pretty clusters </p>
-<img src='static/img/cluster1.png'>
+<p>Absolutely! The activations in the first fully connected layer can be used as the data for any number of clustering algorithms. On the <a href="{{ url_for('gallery') }}">Gallery</a> tab, I have provided examples of clusters using the K-Means algorithm.
+
+Images cluster quite  </p> 
 
 {% endblock %}

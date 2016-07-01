@@ -7,5 +7,7 @@ results/*
 src/featurizing/fc*
 src/.ipynb*
 app/*.pyc
-app/uploads/*
+
+# Images to Ignore
+app/static/uploads/*
 app/static/training_img/*

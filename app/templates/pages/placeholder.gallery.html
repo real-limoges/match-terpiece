@@ -9,17 +9,27 @@ body {
 }
 
 img {
-    height:70%;
-    width:70%;
+    max-height:550px;
+    max-width:550px;
+    height:auto;
+    width:auto;
     display: block;
     margin: 0 auto;
 }
+.carousel-control.left {
+    background-image: none;
+}
+.carousel-control.right {
+    background-image: none;
+}
+
 </style>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="static/js/libs/bootstrap-3.1.1.min.js"></script>
-<br><br>
+
+<br>
 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval=5000>
   <!-- Indicators -->
   <ol class="carousel-indicators">
@@ -31,12 +41,12 @@ img {
   <!-- Wrapper for slides -->
   <div class="carousel-inner"> 
     <div class="item active">
-      <img src="static/img/cluster1.png" alt="..." class="img-responsive" > 
+      <img src="static/img/cluster1.png" class="img-responsive center-block" > 
       <div class="carousel-caption">
       </div>
     </div>
     <div class="item">
-      <img src="static/img/cluster2.png" alt="..." class="img=responsive">
+      <img src="static/img/cluster2.png" alt="..." class="img-responsive center-block">
       <div class="carousel-caption">
       </div>
     </div>

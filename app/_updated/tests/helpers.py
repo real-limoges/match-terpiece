@@ -5,6 +5,7 @@ from app import create_app
 
 
 class TestClient(object):
+
     def __init__(self, app):
         self.app = app
 
@@ -36,6 +37,7 @@ class TestClient(object):
 
 
 class TestCase(unittest.TestCase):
+
     def setUp(self):
         self.app = create_app('config')
         self.ctx = self.app.app_context()

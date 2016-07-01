@@ -5,17 +5,20 @@ import pandas as pd
 
 DATA_DIR = '../data/'
 
+
 def compute_PCA(df):
     pca = PCA()
     pca.fit(df)
 
     cumsum = np.cumsum(pca.explained_variance_ratio_)
     n_comp = len(cumsum[cumsum < 0.9])
-    return PCA(n_components = n_comp).fit_transform(df)
+    return PCA(n_components=n_comp).fit_transform(df)
+
 
 def compute_FA(df):
     FA = FactorAnalysis()
     return FA.fit_transform(df)
+
 
 def compute_NMF(df):
     nmf = NMF(n_components=300)
@@ -39,4 +42,3 @@ if __name__ == '__main__':
     for i in sys.argv:
         if i != __file__:
             reduce_dimensions(df, i[:3])
-    

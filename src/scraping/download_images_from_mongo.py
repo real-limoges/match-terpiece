@@ -13,6 +13,7 @@ s3 = boto3.resource('s3')
 
 IMAGE_DIR = '../images/'
 
+
 def download_image(link):
     """
     INPUT: Link (string), Bucket (string)
@@ -30,6 +31,7 @@ def download_image(link):
         s3.Object(bucket_name, link[36:]).put(Body=open(link[36:]))
         os.remove(link[36:])
     return
+
 
 def url_generator(collection):
     '''

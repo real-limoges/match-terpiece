@@ -18,6 +18,7 @@ DATA_DIR = os.path.join(directory, '../../data/')
 IMAGE_DIR = os.path.abspath('../../images/') + '/'
 WEIGHTS = os.path.join(DATA_DIR, 'vgg16_weights.h5')
 
+
 def pop_layer(model):
     '''
     INPUTS: Keras Sequential Model Object
@@ -129,15 +130,15 @@ def transform_image(path):
     try:
 
         im = misc.imread(path)
-        im = im[:,:,[2,1,0]]
+        im = im[:, :, [2, 1, 0]]
         im = misc.imresize(im, (224, 224)).astype(np.float32)
 
         for channel in xrange(3):
-            im[:,:,channel] -= mean_pixel[channel]
+            im[:, :, channel] -= mean_pixel[channel]
         im = im.transpose((2, 1, 0))
-    
+
         return np.expand_dims(im, axis=0)
-    
+
     except Exception:
         print "Issues with file {}".format(path)
         return None
@@ -157,7 +158,7 @@ def create_weights(model, cls):
     image_names = []
 
     image_list = [image for image in os.listdir(IMAGE_DIR)
-                        if image.endswith('.jpg')]
+                  if image.endswith('.jpg')]
     for x, image in enumerate(image_list):
         if image.endswith('.jpg'):
             img_arr = transform_image(IMAGE_DIR + image)
@@ -168,8 +169,9 @@ def create_weights(model, cls):
                 output.shape = (1, 4096)
                 data = pd.concat([data, pd.DataFrame(output)], axis=0)
     data.set_index(pd.Series(image_names), inplace=True)
-    
+
     return data
+
 
 def build_model(cls):
     '''
@@ -180,8 +182,9 @@ def build_model(cls):
     model = VGG_16(WEIGHTS, cls)
     sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss='categorical_crossentropy')
-    
+
     return model
+
 
 def score_one_photo(model, path):
     '''
@@ -189,23 +192,24 @@ def score_one_photo(model, path):
     OUTPUTS: Returns Pandas Dataframe with size (1,4096)
 
     Takes a compiled model and a path to a single image. Transforms
-    the image, predicts with the neural network, and returns as a 
+    the image, predicts with the neural network, and returns as a
     dataframe.
     '''
     image = transform_image(path)
     output = model.predict(image)[0]
-    output.shape = (1, 4096)
+    output.shape = (4096, 1)
+    return output
 
-    return pd.DataFrame(output)
+    # return pd.DataFrame(output)
 
 
 if __name__ == '__main__':
 
     model_fc1 = build_model('fc1')
-    model_fc2 = build_model('fc2')    
+    model_fc2 = build_model('fc2')
 
     data_fc1 = create_weights(model_fc1, 'fc1')
     data_fc1.to_csv(DATA_DIR + 'fc1_cluster.csv')
-    
+
     data_fc2 = create_weights(model_fc2, 'fc2')
     data_fc2.to_csv(DATA_DIR + 'fc2_cluster.csv')

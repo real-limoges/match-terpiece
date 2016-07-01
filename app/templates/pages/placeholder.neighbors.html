@@ -1,29 +1,119 @@
 {% extends 'layouts/main.html' %}
-{% block title %}Home{% endblock %}
+{% block title %}Recommendations{% endblock %}
 {% block content %}
 
-
+<!-- Internal Styles -->
 <style>
 
-img {
-    height:70%;
-    width:70%;
-    display: block;
-    margin: 0 auto;
+div.container4 {
+    position: relative
+    max-height: 600px;
+    min-height: 600px;
 }
+
+div.container4 img {
+    min-width: 360px;
+    max-width: 360px;
+    max-height: 500px;
+    display: inline-block;
+    height: auto;
+    width: auto;
+    position: absolute;
+    margin: 0 auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) }
+
+.carousel-control.left {
+    background-image: none;
+    max-height: 700px;
+}
+.carousel-control.right {
+    background-image: none;
+    max-height: 700px;
+}
+
+.carousel {
+  max-height: 600px;
+  min-height: 600px;
+  position: relative;
+  margin-top: 42px;
+}
+
+.carousel .item {
+  max-height: 100%;
+  max-height: 500px;
+  background-color: #FFF;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.carousel-inner > .item > img {
+  min-height: 500px;
+  max-height: 500px;
+  max-width: 650px;
+  display: block; 
+  width: auto;
+  height:auto;
+  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 </style>
 
+<!-- Scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
-{% if filename %}
-<br><br>
-<center>
-<!-- <img src='/static/uploads/{{filename}}' /> -->
-</center>
-{% endif %}
+<script src="static/js/libs/bootstrap-3.3.6.min.js"></script>
 
-{% for item in filenames %}
-<img src='/static/training_img/{{item}}' />
-{% endfor %}
+<!-- HTML -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+        <h3><center>Your Piece</center></h3>
+        <div class="container4">
+            <img class="img-responsive center-block" src="/static/uploads/{{original}}">
+        </div>
+        </div>
+        <div class="col-md-8">
+        <h3><center>Recommendations</center></h3>
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval=5000>
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="4"></li> 
+  </ol>
+ 
+  <div class="carousel-inner">
+      {% if active_file %}
+      <div class="item active">
+          <img class="img-responsive" src='/static/training_img/{{active_file}}' alt='..' />
+            <div class="carousel-caption"></div>
+        </div>
+      {% endif %}
+      {% for image in filenames %}
+        <div class="item">
+        <img class="img-responsive" src='/static/training_img/{{image}}' />
+        <div class="carousel-caption">Foo</div>
+        </div>
+        
+      {% endfor %}
+    </div>
+  </div>
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+  </a>
+</div>
+</div>
+</div>
+
 
 {% endblock %}
-

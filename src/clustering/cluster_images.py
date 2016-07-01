@@ -7,18 +7,21 @@ from sklearn import metrics
 import sys
 
 
-#Sklearn uses a depreciated connection to Fortran - raises a warning
+# Sklearn uses a depreciated connection to Fortran - raises a warning
 import warnings
 warnings.filterwarnings('ignore')
 
-IMAGE_DIR = '../../tmp/images/'
-DATA_DIR = '../data/'
-RESULTS_DIR = '../results/'
+directory = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(directory, '../../data/')
+IMAGE_DIR = os.path.join(directory, '../../images/')
+RESULTS_DIR = os.path.join(directory, '../../results/')
+
 
 def run_k_means(df):
     '''
     INPUTS: Pandas Dataframe
-    OUTPUTS: Fitted K-Means model that has the highest Silhouette Coefficient
+    OUTPUTS: Fitted K-Means model that has the highest 
+             Silhouette Coefficient
 
     Iterates through a series of k hyperparameters (5 to 20) and computes
     the Silhouette Coefficient for each (a measure of how dense the clusters
@@ -32,11 +35,13 @@ def run_k_means(df):
         model = model_k_means(df, k)
         models.append(model)
         labels = model.labels_
-        scores.append(metrics.silhouette_score(df, labels, metric='euclidean'))
-    
+        scores.append(metrics.silhouette_score(df, labels, 
+                                               metric='euclidean'))
+
     index = np.argmax(np.array(scores))
-    
+
     return models[index]
+
 
 def model_k_means(df, k):
     '''
@@ -48,8 +53,12 @@ def model_k_means(df, k):
 
 
 def run_mean_shift(df):
+    '''
+    INPUTS: Pandas Dataframe
+    OUTPUTS: Returns a fitted MeanShift object
+    '''
     model = MeanShift(min_bin_freq=10, cluster_all=False, n_jobs=-1)
-    return model.fit(df) 
+    return model.fit(df)
 
 
 if __name__ == '__main__':
@@ -57,16 +66,15 @@ if __name__ == '__main__':
         df = pd.read_csv(DATA_DIR + sys.argv[1], index_col=0)
         cls = sys.argv[1][:3]
     else:
-        df = pd.read_csv(DATA_DIR + 'clusters.csv', index_col=0)
-        cls = ''
-    
-    k_means = run_k_means(df) 
-   
+        raise Exception('Please provide a dataset')
+
+    # Builds K-Means
+    k_means = run_k_means(df)
     with open(RESULTS_DIR + 'k_means_model_{}.pkl'.format(cls), 'wb') as f:
         pickle.dump(k_means, f)
 
+    # Builds MeanShift
     mean_shift = run_mean_shift(df)
-
-    with open(RESULTS_DIR + 'mean_shift_model_{}.pkl'.format(cls), 
-            'wb') as f:
+    with open(RESULTS_DIR + 'mean_shift_model_{}.pkl'.format(cls),
+              'wb') as f:
         pickle.dump(mean_shift, f)

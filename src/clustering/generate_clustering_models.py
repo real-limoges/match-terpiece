@@ -7,18 +7,19 @@ import cPickle as pickle
 from sklearn import metrics
 import sys
 
-#Sklearn uses a depreciated connection to Fortran - raises a warning
+# Sklearn uses a depreciated connection to Fortran - raises a warning
 import warnings
 warnings.filterwarnings('ignore')
 
-DATA_DIR = '../data/'
-RESULTS_DIR = '../results/'
+directory = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(directory, '../../data/')
+IMAGE_DIR = os.path.join(directory, '../../images/')
 
 
 def run_k_means(df, cls, norm=False):
     '''
     INPUTS: Pandas Dataframe
-    OUTPUTS: Fitted K-Means model that has the highest Silhouette 
+    OUTPUTS: Fitted K-Means model that has the highest Silhouette
     Coefficient
 
     Iterates through a series of k hyperparameters (5 to 20) and computes
@@ -32,9 +33,10 @@ def run_k_means(df, cls, norm=False):
         print "Clustering with {} as the hyperparameter".format(k)
         model = model_k_means(df, k)
 
-        with open(RESULTS_DIR + 'k_{}_{}_{}.pkl'.format(k,cls,norm), 
-                    'wb') as f:
+        with open(RESULTS_DIR + 'k_{}_{}_{}.pkl'.format(k, cls, norm),
+                  'wb') as f:
             pickle.dump(model, f)
+
 
 def model_k_means(df, k):
     '''
@@ -42,8 +44,8 @@ def model_k_means(df, k):
     OUTPUTS: Fitted K-Means Model
     '''
     clstr = MiniBatchKMeans(n_clusters=k, random_state=42,
-            batch_size=100, verbose=0, compute_labels=False,
-            init='random')
+                            batch_size=100, verbose=0, compute_labels=False,
+                            init='random')
     return clstr.fit(df)
 
 
@@ -53,6 +55,6 @@ if __name__ == '__main__':
         cls = sys.argv[1][:3]
     else:
         raise Exception("Please provide a data file")
-    
+
     run_k_means(df, cls, norm=False)
     run_k_means(df, cls, norm=True)
