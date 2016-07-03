@@ -1,64 +1,68 @@
-{% extends 'layouts/main.html' %}
-{% block title %}Gallery{% endblock %}
-{% block content %}
-
-<style>
-body {
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+  {% extends 'layouts/main.html' %} {% block title %}Gallery{% endblock %} {%
+  block content %}
+  <style>
+  body {
     overflow-y:hidden;
     overflow-x:hidden;
-}
+  }
 
-img {
+  img {
     max-height:550px;
     max-width:550px;
     height:auto;
     width:auto;
     display: block;
     margin: 0 auto;
-}
-.carousel-control.left {
+  }
+  .carousel-control.left {
     background-image: none;
-}
-.carousel-control.right {
+  }
+  .carousel-control.right {
     background-image: none;
-}
+  }
 
-</style>
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="static/js/libs/bootstrap-3.1.1.min.js"></script>
-
-<br>
-<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval=5000>
-  <!-- Indicators -->
-  <ol class="carousel-indicators">
-    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-  </ol>
- 
-  <!-- Wrapper for slides -->
-  <div class="carousel-inner"> 
-    <div class="item active">
-      <img src="static/img/cluster1.png" class="img-responsive center-block" > 
-      <div class="carousel-caption">
+  </style>
+  <script src=
+  "https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+  </script> 
+  <script src="static/js/libs/bootstrap-3.1.1.min.js">
+  </script><br>
+  <div class="carousel slide" data-interval="5000" data-ride="carousel" id=
+  "carousel-example-generic">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li class="active" data-slide-to="0" data-target=
+      "#carousel-example-generic"></li>
+      <li data-slide-to="1" data-target="#carousel-example-generic"></li>
+      <li data-slide-to="2" data-target="#carousel-example-generic"></li>
+    </ol><!-- Wrapper for slides -->
+    <div class="carousel-inner">
+      <div class="item active">
+        <img class="img-responsive center-block" src="static/img/cluster1.png">
+        <div class="carousel-caption"></div>
       </div>
-    </div>
-    <div class="item">
-      <img src="static/img/cluster2.png" alt="..." class="img-responsive center-block">
-      <div class="carousel-caption">
+      <div class="item">
+        <img alt="..." class="img-responsive center-block" src=
+        "static/img/cluster2.png">
+        <div class="carousel-caption"></div>
       </div>
-    </div>
-  </div>
- 
-  <!-- Controls -->
-  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-    <span class="glyphicon glyphicon-chevron-left"></span>
-  </a>
-  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-    <span class="glyphicon glyphicon-chevron-right"></span>
-  </a>
-</div>
-
-{% endblock %}
+      <div class="item">
+        <img alt="..." class="img-responsive center-block" src=
+        "static/img/cluster3.png">
+        <div class="carousel-caption"></div>
+      </div>
+    </div><!-- Controls -->
+     <a class="left carousel-control" data-slide="prev" href=
+    "#carousel-example-generic" role="button"><span class=
+    "glyphicon glyphicon-chevron-left"></span></a> <a class=
+    "right carousel-control" data-slide="next" href="#carousel-example-generic"
+    role="button"><span class="glyphicon glyphicon-chevron-right"></span></a>
+  </div>{% endblock %}
+</body>
+</html>

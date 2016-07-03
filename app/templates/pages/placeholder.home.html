@@ -1,47 +1,49 @@
-{% extends 'layouts/main.html' %}
-{% block title %}Home{% endblock %}
-{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
 
-<div class="page-header">
-    <h1 align='center'>Transfer Learning Demonstration</h1>
-</div>
+<style>
+  div.page-header{
+    color: #FE642E;
+  }   
+  div.container-fluid{
+      margin-left: 75px;
+      margin-right: 75px;
+  }
+  p {
+      font-size: 16px;
+  }
+</style>
+<script src="static/js/libs/bootstrap-3.3.6.min.js">
+</script>
+</head>
 
-<b><i>
-"If I have seen further, it is by standing on the shoulders of giants."
-<br> -- Sir Isaac Newton </i></b>
-
-<h3>What is Transfer Learning?</h3>
-<p>Transfer learning takes a machine learning model that solves one problem and recycles it to solve other related problems. In the case of this project, the neural network was trained on ImageNet photos. these photos have 1,000 classes that need to be detected. ImageNet images are 
-
-This project 
-
-</p>
-
-<h3>Which Pre-Trained Neural Network Was Used?</h3>
-<p>
-VGG16 (also known as OxfordNet.) VGG16 was the 2014 ILSVR (ImageNet) winner; while there have been recent advances in neural networks, it still performs excellently on its intended purpose and prediction is relatively quick.
-</p>
-<p>
-VGG16, as many past winners of the ImageNet competition, uses convolutional layers to process the data. Convolutional layers serve two purposes in helping classify images.
-<br>
-<li>
-Convolutions help decrease the number of neurons in a network. ImageNet items are 224x224 pixels in 3 color channels. For a fully connected neural network, this would require ~150k parameters for each layer. Subsequently, we would not be able to leverage the full capacity of deep learning with such shallow layers.
-</li>
-<li>
-Convolutions help maintain the structure of the image that is passed through it. This is of particular importance in images.
-</li>
-</p>
-<p>Below I've embedded the VGG16 architecture</p>
-<center><img src='static/img/vgg16arch.png' class='img-responsive' /></center>
-<h3>What Data Was Used</h3>
-<p>I used the Flickr API to generate the links of approximately 55 thousand images that were tagged as "abstract art." Of these, 45 thousand images were publically available, and satisfied the 224x224 pixel requirement.
-</p>
-<p>Instead of using the classifications provided by VGG16, the last few layers were removed and the output for each image is a row with 4,096 columns. Each column corresponds to the activation on that neuron.
-</p>
-
-<h3>Is There Pattern In The Data?</h3>
-<p>Absolutely! The activations in the first fully connected layer can be used as the data for any number of clustering algorithms. On the <a href="{{ url_for('gallery') }}">Gallery</a> tab, I have provided examples of clusters using the K-Means algorithm.
-
-Images cluster quite  </p> 
-
-{% endblock %}
+<body>
+  {% extends 'layouts/main.html' %} {% block title %}Home{% endblock %} {%
+  block content %}
+  <div class="page-header">
+    <h1 align='center'>match-terpiece</h1>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+          <p>
+          Match-terpiece is a simple app that solves a simple problem.
+          </p>
+          <p>
+          Have
+        you ever seen a piece of art you like, but can't put your finger on
+        what you like about it?</p><br>
+        <p>Match-terpiece aims to solve this. It's a simple as uploading a photo of a piece you like.</p>
+        <p>
+        Upload a photo of a piece you
+        like, and Match-terpiece will show you 10 similar style pieces in less
+        than a second.</p>
+      </div>
+      <div class="col-md-4 col-md-offset-2">
+        foo
+      </div>
+    </div>{% endblock %}
+  </div>
+</body>
+</html>

@@ -1,13 +1,15 @@
-images/*
+# Data Directories
 data/*
-src/*.pyc
 results/*
-/src/*.swp
-*.tar.gz
 src/featurizing/fc*
-src/.ipynb*
-app/*.pyc
 
 # Images to Ignore
 app/static/uploads/*
 app/static/training_img/*
+
+# Extensions
+find . -name "*.pyc"
+*.swp
+*.tar.gz
+src/.ipynb*
+

@@ -5,12 +5,8 @@ from __future__ import print_function
 import flask
 from flask import (Flask, render_template, request, url_for,
                    redirect, send_from_directory)
-from flask_multistatic import MultiStaticFlask
 from werkzeug.utils import secure_filename
 
-import logging
-from logging import Formatter, FileHandler
-from forms import *
 import os
 import requests
 import cPickle as pickle
@@ -26,7 +22,7 @@ import sys
 UPLOAD_FOLDER = 'static/uploads/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'tiff'])
 
-app = MultiStaticFlask(__name__)
+app = Flask(__name__)
 app.config.from_object('config')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['CUSTOM_STATIC_PATH'] = '../images/'
@@ -46,14 +42,12 @@ TREE, INDEXES = get_tree_index('angular')
 # Miscellaneous Functions
 #----------------------------------------------------------------------------#
 
-def getitem(obj, item, default):
-    if item not in obj:
-        return default
-    else:
-        return obj[item]
-
-
 def allowed_file(filename):
+    '''
+    INPUT: Filename (string)
+    OUTPUTS: Boolean. True if the file conforms to typical photo
+             conventions.
+    '''
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in  \
         ALLOWED_EXTENSIONS
 
@@ -147,6 +141,10 @@ def gallery():
 
 @app.errorhandler(404)
 def not_found_error(error):
+    '''
+    INPUTS: Error
+    OUTPUTS: Side Effects Only (shows 404.html)
+    '''
     return render_template('errors/404.html'), 404
 
 #----------------------------------------------------------------------------#
