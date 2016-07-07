@@ -79,12 +79,12 @@ def upload_photo():
         if 'uploaded' not in request.files:
             flash('No file part')
             return redirect(request.url)
-        
+
         f = request.files['uploaded']
         if f.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        
+
         if f and allowed_file(f.filename):
             filename = secure_filename(f.filename)
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -107,19 +107,20 @@ def neighbors(filename):
     image, the closest neighbor, and the remaining as a list.
     '''
     path = os.path.abspath('static/uploads/' + filename)
-    
+
     score = score_one_photo(MODEL, path)
     kneighs = TREE.get_nns_by_vector(score, 10)
-    
-    # Creates the list of approximate nearest neighbors    
+
+    # Creates the list of approximate nearest neighbors
     filenames = []
     for item in kneighs:
         filenames.append(INDEXES[item])
     first_file = filenames.pop(0)
     original = filename
     return render_template('pages/placeholder.neighbors.html',
-                           original=original, active_file=first_file, 
+                           original=original, active_file=first_file,
                            filenames=filenames)
+
 
 @app.route('/about')
 def about():

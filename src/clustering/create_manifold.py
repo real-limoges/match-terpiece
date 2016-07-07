@@ -14,7 +14,7 @@ def run_TSNE(df):
     INPUTS: Pandas Dataframe
     OUTPUTS: Fitted t-SNE dataset (numpy array)
     '''
-    
+
     tsne = manifold.TSNE(n_components=2, method='exact',
                          random_state=RANDOM_STATE)
 

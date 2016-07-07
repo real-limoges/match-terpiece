@@ -9,9 +9,7 @@ Transfer learning takes a machine learning model that solves one classification 
 
 ### Which Pre-Trained Neural Network Was Used?
 
-VGG16, also known as OxfordNet.
-
-VGG16 was the 2014 ImageNet winner; while there have been recent advances in neural networks, it still performs excellently on its intended purpose and prediction is relatively quick.
+VGG16, also known as OxfordNet. VGG16 was the 2014 ImageNet winner; while there have been recent advances in neural networks, it still performs excellently on its intended purpose and prediction is relatively quick.
 
 VGG16, as many past winners of the ImageNet competition, uses convolutional layers to process the data. Convolutional layers serve two purposes in helping classify images.  
 
@@ -23,7 +21,6 @@ VGG16, as many past winners of the ImageNet competition, uses convolutional laye
 
 I used the Flickr API to generate the links of approximately 55 thousand images that were tagged as "abstract art." Of these, 45 thousand images were publically available and satisfied the 224x224 pixel requirement.
 
-Images
 
 ### Is There Pattern In The Data?
 

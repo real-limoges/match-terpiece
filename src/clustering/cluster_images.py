@@ -35,7 +35,7 @@ def run_k_means(df):
         model = model_k_means(df, k)
         models.append(model)
         labels = model.labels_
-        scores.append(metrics.silhouette_score(df, labels, 
+        scores.append(metrics.silhouette_score(df, labels,
                                                metric='euclidean'))
 
     index = np.argmax(np.array(scores))

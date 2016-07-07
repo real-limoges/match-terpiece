@@ -20,7 +20,7 @@ def is_square(num):
     INPUTS: Number (integer)
     OUTPUTS: Boolean if number is perfect square
     '''
-    
+
     root = sqrt(num)
     if int(root + 0.5)**2 == num:
         return True
@@ -32,7 +32,7 @@ def make_file_name(image_name):
     INPUTS: Name of image
     OUTPUTS: String of the path to the image
     '''
-    
+
     return IMAGE_DIR + image_name
 
 
@@ -51,20 +51,20 @@ def plot_images(images, cls, norm, k, cluster):
         # Removes one image at a time until a perfect square is reached
         converged = False
         num = len(images)
-        
+
         while converged == False:
             num -= 1
             converged = is_square(num)
-        
-        # Reshapes images into (num, num) numpy array 
+
+        # Reshapes images into (num, num) numpy array
         images = images[:num]
         num = int(sqrt(len(images)))
         images = images.reshape(num, num)
-    
+
     else:
         num = int(sqrt(len(images)))
         images = images.reshape(num, num)
-    
+
     h, w, = 224, 224
     background = II.new('RGB', (224 * num, 224 * num), (255, 255, 255))
 
@@ -87,12 +87,12 @@ def run_plot(df, cls, norm, model=False):
     Opens model and data. Shows the cluster centers by printing them to
     file
     '''
-    
+
     if model == False:
         find_k = pickle.load(open("{}{}_{}.pkl".format(RESULTS_DIR,
                                                        cls, norm)))
         model = pickle.load(open("{}k_{}_{}_{}.pkl".format(RESULTS_DIR,
-                                          find_k[0][0], cls, norm), 'rb'))
+                                                           find_k[0][0], cls, norm), 'rb'))
     if norm == True:
         df1 = StandardScaler(copy=False).fit_transform(df)
         df = pd.DataFrame(df1, index=df.index, columns=df.columns)
