@@ -18,9 +18,6 @@ VGG16, as many past winners of the ImageNet competition, uses convolutional laye
 *   Convolutions help decrease the number of neurons in a network. ImageNet items are 224x224 pixels in 3 color channels. For a fully connected neural network, this would require ~150k parameters for each layer. We would not be able to leverage the full capacity of deep learning with such shallow layers.
 *   Convolutions help maintain the structure of the image that is passed through it.
 
-Below I've embedded the VGG16 architecture:
-
-<center>![](static/img/vgg16arch.png)</center>
 
 ### What Data Was Used
 
@@ -30,4 +27,4 @@ Images
 
 ### Is There Pattern In The Data?
 
-Absolutely! The activations in the first fully connected layer can be used as the data for any number of clustering algorithms. On the [Gallery]({{url_for('gallery')}}) tab, I have provided examples of clusters using the K-Means algorithm. The dense representaiton of the images clusters quite naturally.
+Absolutely! The activations in the first fully connected layer can be used as the data for any number of clustering algorithms. The dense representaiton of the images clusters quite naturally. For some examples, I have a couple in the [Gallery](www.match-terpiece.com/gallery) on my website.
