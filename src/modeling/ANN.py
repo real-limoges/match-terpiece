@@ -2,8 +2,7 @@ import sys
 import numpy as np
 import pandas as pd
 from annoy import AnnoyIndex
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
+#import matplotlib.image as mpimg
 import os
 import cPickle as pickle
 from sklearn.preprocessing import StandardScaler

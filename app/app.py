@@ -25,8 +25,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'tiff'])
 app = Flask(__name__)
 app.config.from_object('config')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['CUSTOM_STATIC_PATH'] = '../images/'
-sys.path.append('/Users/reallimoges/projects/transfer_learning')
+sys.path.append('/home/ubuntu/match-terpiece')
 
 from src.modeling.run_neural_net import score_one_photo, build_model
 from src.modeling.ANN import get_tree_index
@@ -57,6 +56,7 @@ def allowed_file(filename):
 #----------------------------------------------------------------------------#
 
 @app.route('/')
+@app.route('/index')
 def home():
     '''
     INPUTS: None
@@ -152,4 +152,4 @@ def not_found_error(error):
 #----------------------------------------------------------------------------#
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)

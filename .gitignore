@@ -8,8 +8,8 @@ app/static/uploads/*
 app/static/training_img/*
 
 # Extensions
-find . -name "*.pyc"
+/*.pyc
 *.swp
 *.tar.gz
 src/.ipynb*
-
+/*.DS_Store
