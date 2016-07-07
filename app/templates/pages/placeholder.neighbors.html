@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
+<meta name="generator" content=
+"HTML Tidy for HTML5 for Mac OS X version 5.2.0">
+<title></title>
 </head>
 <body>
-  {% extends 'layouts/main.html' %} {% block title %}Recommendations{% endblock
-  %} {% block content %} <!-- Internal Styles -->
-  <style>
+{% extends 'layouts/main.html' %} {% block title
+%}Recommendations{% endblock %} {% block content %} 
+<!-- Internal Styles -->
+<style>
 
   div.container4 {
     position: relative
@@ -63,61 +66,47 @@
   margin-right: auto;
   }
 
-  </style><!-- Scripts -->
-  <script src=
-  "https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
-  </script> 
-  <script src="static/js/libs/bootstrap-3.3.6.min.js">
-  </script> <!-- HTML -->
-  <div class="container">
-    <div class="row">
-      <div class="col-md-4">
-        <center>
-          <h3>Your Piece</h3>
-        </center>
-        <div class="container4"><img class="img-responsive center-block" src=
-        "/static/uploads/{{original}}"></div>
-      </div>
-      <div class="col-md-8">
-        <center>
-          <h3>Recommendations</h3>
-        </center>
-        <div class="carousel slide" data-interval="5000" data-ride="carousel"
-        id="carousel-example-generic">
-          <ol class="carousel-indicators">
-            <li class="active" data-slide-to="0" data-target=
-            "#carousel-example-generic"></li>
-            <li data-slide-to="1" data-target="#carousel-example-generic"></li>
-            <li data-slide-to="2" data-target="#carousel-example-generic"></li>
-            <li data-slide-to="3" data-target="#carousel-example-generic"></li>
-            <li data-slide-to="4" data-target="#carousel-example-generic"></li>
-            <li data-slide-to="5" data-target="#carousel-example-generic"></li>
-            <li data-slide-to="6" data-target="#carousel-example-generic"></li>
-            <li data-slide-to="7" data-target="#carousel-example-generic"></li>
-            <li data-slide-to="8" data-target="#carousel-example-generic"></li>
-            <li data-slide-to="9" data-target="#carousel-example-generic"></li>
-          </ol>
-          <div class="carousel-inner">
-            {% if active_file %}
-            <div class="item active">
-              <img alt='..' class="img-responsive" src=
-              '/static/training_img/{{active_file}}'>
-              <div class="carousel-caption"></div>
-            </div>{% endif %} {% for image in filenames %}
-            <div class="item">
-              <img class="img-responsive" src='/static/training_img/{{image}}'>
-              <div class="carousel-caption">
-              </div>
-            </div>{% endfor %}
-          </div>
-        </div><a class="left carousel-control" data-slide="prev" href=
-        "#carousel-example-generic" role="button"><span class=
-        "glyphicon glyphicon-chevron-left"></span></a> <a class=
-        "right carousel-control" data-slide="next" href=
-        "#carousel-example-generic" role="button"><span class=
-        "glyphicon glyphicon-chevron-right"></span></a>
-      </div>
-    </div>
-  </div>{% endblock %}
+</style>
+<!-- Scripts -->
+<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+</script> 
+<script src="static/js/libs/bootstrap-3.3.6.min.js">
+</script> <!-- HTML -->
+<div class="container">
+<div class="row">
+<div class="col-md-4">
+<center>
+<h3>Your Piece</h3>
+</center>
+<div class="container4"><img class="img-responsive center-block"
+src="/static/uploads/{{original}}"></div>
+</div>
+<div class="col-md-8">
+<center>
+<h3>Recommendations</h3>
+</center>
+<div class="carousel slide" data-interval="5000" data-ride=
+"carousel" id="carousel-example-generic">
+<ol class="carousel-indicators"></ol>
+<div class="carousel-inner">{% if active_file %}
+<div class="item active"><img alt='..' class="img-responsive" src=
+'/static/training_img/{{active_file}}'>
+<div class="carousel-caption"></div>
+</div>
+{% endif %} {% for image in filenames %}
+<div class="item"><img class="img-responsive" src=
+'/static/training_img/{{image}}'>
+<div class="carousel-caption"></div>
+</div>
+{% endfor %}</div>
+</div>
+<a class="left carousel-control" data-slide="prev" href=
+"#carousel-example-generic" role="button"></a> <a class=
+"right carousel-control" data-slide="next" href=
+"#carousel-example-generic" role="button"></a></div>
+</div>
+</div>
+{% endblock %}
 </body>
 </html>
